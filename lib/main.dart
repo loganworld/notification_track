@@ -13,21 +13,19 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-List<Map<String, dynamic> > _log = [{
+List<Map<String, dynamic>> _log = [
+  {
     "packageMessage": "event.packageMessage",
     "packageName": "event.packageName",
     "packageText": "event.packageText",
     "timeStamp": " event.timeStamp"
-  }];
+  }
+];
 
 class _MyAppState extends State<MyApp> {
   AndroidNotificationListener _notifications;
   StreamSubscription<NotificationEventV2> _subscription;
-  Map<String, dynamic> cdata = {
-    "id":"2",
-    "app":"SMS",
-    "msg":"testing SMS"
-  };
+  Map<String, dynamic> cdata = {"id": "2", "app": "SMS", "msg": "testing SMS"};
   @override
   void initState() {
     super.initState();
@@ -41,11 +39,10 @@ class _MyAppState extends State<MyApp> {
 
   void onData(NotificationEventV2 event) {
     print(event);
-    print('converting package extra to json');
     Map<String, dynamic> data = {
-        "id":"2",
-        "app":"SMS",
-        "msg": event.packageMessage??"",
+      "id": "2",
+      "app": "SMS",
+      "msg": event.packageMessage ?? "",
     };
     setState(() {
       cdata = data;
@@ -85,17 +82,25 @@ class _MyAppState extends State<MyApp> {
             children: [
               for (int i = 1; i < _log.length; i++)
                 Container(
-                  width: 300,
-                  padding: EdgeInsets.all(20),
-                  margin: EdgeInsets.all(20),
-                  decoration: BoxDecoration(color: Colors.white,boxShadow: [BoxShadow(color: Colors.grey[300],blurRadius: 100,spreadRadius: 10)] ,),
+                    width: 300,
+                    padding: EdgeInsets.all(20),
+                    margin: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey[300],
+                            blurRadius: 100,
+                            spreadRadius: 10)
+                      ],
+                    ),
                     child: Column(
-                  children: [
-                    Text(_log[i]["packageMessage"]),
-                    Text(_log[i]["packageName"]),
-                    Text(_log[i]["timeStamp"].toString()),
-                  ],
-                ))
+                      children: [
+                        Text(_log[i]["packageMessage"]),
+                        Text(_log[i]["packageName"]),
+                        Text(_log[i]["timeStamp"].toString()),
+                      ],
+                    ))
             ],
           ),
         ),
