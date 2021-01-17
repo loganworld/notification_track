@@ -40,11 +40,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onData(NotificationEventV2 event) {
-    String packageMessage;
-    String packageName;
-    String packageExtra;
-    String packageText;
-    DateTime timeStamp;
     print(event);
     print('converting package extra to json');
     Map<String, dynamic> data = {
