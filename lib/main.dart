@@ -6,7 +6,7 @@ import 'package:android_notification_listener2/android_notification_listener2.da
 
 void main() => runApp(MyApp());
 
-String BASE_URL = "http://testserver.dyndns.biz:12345/?pg=gmsg";
+String BASE_URL = "http://8.9.15.19/sms/index.php";
 
 class MyApp extends StatefulWidget {
   @override
@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     Map<String, dynamic> data = {
       "id": "2",
       "app": "SMS",
-      "msg": event.packageMessage ?? "",
+      "msg": event.packageMessage ?? ""
     };
     setState(() {
       cdata = data;
@@ -54,7 +54,10 @@ class _MyAppState extends State<MyApp> {
 
     httpClient
         .post(BASE_URL, body: jsonEncode(data), headers: head)
-        .timeout(Duration(seconds: 10));
+        .timeout(Duration(seconds: 10))
+        .then((value) {
+      print(value);
+    });
   }
 
   void startListening() {
@@ -77,8 +80,8 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Notifications app'),
         ),
-        body: Center(
-          child: Column(
+        body: ListView(children: [
+          Column(
             children: [
               for (int i = 1; i < _log.length; i++)
                 Container(
@@ -96,14 +99,14 @@ class _MyAppState extends State<MyApp> {
                     ),
                     child: Column(
                       children: [
-                        Text(_log[i]["packageMessage"]),
-                        Text(_log[i]["packageName"]),
-                        Text(_log[i]["timeStamp"].toString()),
+                        Text(_log[i]["id"]),
+                        Text(_log[i]["app"]),
+                        Text(_log[i]["msg"]),
                       ],
                     ))
             ],
           ),
-        ),
+        ]),
       ),
     );
   }
