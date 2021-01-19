@@ -11,8 +11,7 @@ void main() => runApp(MyApp());
 String BASE_URL = "http://8.9.15.19/sms/index.php";
 
 List<String> suggestions = [
-  "http://8.9.15.19/sms/index.php",
-  "http://8.9.15.20/sms/index.php"
+  "http://8.9.15.19/sms/index.php"
 ];
 
 class MyApp extends StatefulWidget {
@@ -25,7 +24,8 @@ List<Map<String, dynamic>> _log = [
     "packageMessage": "event.packageMessage",
     "packageName": "event.packageName",
     "packageText": "event.packageText",
-    "timeStamp": " event.timeStamp"
+    "timeStamp": " event.timeStamp",
+    "packageExtra": " event.packageExtra"
   }
 ];
 
@@ -49,12 +49,22 @@ class _MyAppState extends State<MyApp> {
   }
 
   _MyAppState() {
+    loaddata().then((value) {
+      setState(() {});
+    });
     textField = SimpleAutoCompleteTextField(
       clearOnSubmit: false,
       key: key,
       suggestions: suggestions,
       textChanged: (text) => currentText = text,
       textSubmitted: (text) => setState(() {
+        int flag = 0;
+        for (int i = 0; i < suggestions.length; i++)
+          if (suggestions[i] == text) flag = 1;
+        if (flag == 0) {
+          suggestions.add(text);
+          textField.updateSuggestions(suggestions);
+        }
         if (text != "") {
           BASE_URL = text;
           savedata();
@@ -65,11 +75,14 @@ class _MyAppState extends State<MyApp> {
   static Future loaddata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     BASE_URL = prefs.getString("URL") ?? "http://8.9.15.19/sms/index.php";
+    suggestions = prefs.getStringList("suggestion") ??
+        ["http://8.9.15.19/sms/index.php",];
   }
 
   static Future savedata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("URL", BASE_URL);
+    prefs.setStringList("suggestion", suggestions);
   }
 
   void onData(NotificationEventV2 event) {
